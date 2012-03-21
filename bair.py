@@ -1,6 +1,7 @@
 import twitter
 import time,datetime
 
+import numpy
 import matplotlib.pyplot as plt
 
 
@@ -49,21 +50,24 @@ all_pm_tweets=[]
 all_ozon_tweets=[]
 
 last_id=None
-old_last_id=0
 tweets=[0]
 
+trycounter=5
+
 while(True): #will be breaked by last statement
-    
     try:
         tweets=api.GetUserTimeline(id="BeijingAir",max_id=last_id,count=200) #get older
-        old_last_id=last_id
     except twitter.TwitterError:
-        print("TwitterError trying again in 5")
-        print("reseting API")
-        api=twitter.Api()
-        time.sleep(5)
-        print("continue;")
-        continue #tries again 
+        trycounter-=1
+        if(trycounter>0):
+            print("TwitterError trying again in 5")
+            print("reseting API")
+            api=twitter.Api()
+            time.sleep(5)
+            print("continue;")
+            continue #tries again
+        else:
+            break;
     air_tweets = map(lambda tweet: air_tweet(tweet),tweets)
 
     ozon_tweets = pickout_valid_measures(air_tweets,"Ozone")
@@ -82,5 +86,10 @@ while(True): #will be breaked by last statement
 #for tweet in all_pm_tweets:
 #    print tweet
 
+x=numpy.array(map(lambda tweet:tweet.t,all_pm_tweets))
+y0=numpy.array(map(lambda tweet:tweet.values[0],all_pm_tweets))
+y1=numpy.array(map(lambda tweet:tweet.values[1],all_pm_tweets))
 
-
+plt.plot(x,y0,'r-')
+plt.plot(x,y1,'g-')
+plt.show()
