@@ -1,5 +1,8 @@
 == BeijingAirPlotter
-
+Takes information from: http://twitter.com/#!/beijingair
+The Twitter API can only access the last 3'200 posts which is a pity since we can only check about a month 
 
 == Uses this library (and python)
 http://code.google.com/p/python-twitter/
+
+
